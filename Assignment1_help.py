@@ -49,6 +49,8 @@ class Assignment1:
 
         # Wait until all printer threads finish by joining them
         # Write code here
+        for t in self.pThreads:
+            t.join()
         print("Simulation finished.")
         # We won't join machine threads as they may be in busy waiting.
         # Flush output and exit.
@@ -86,6 +88,8 @@ class Assignment1:
             # Release the binary semaphore
             self.outer.binary.release()
             # Increment the semaphore count so that machines can send requests
+            self.outer.semaphore.release()
+
 
 
     # Machine class
