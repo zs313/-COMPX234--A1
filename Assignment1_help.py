@@ -85,6 +85,7 @@ class Assignment1:
             self.outer.print_list.queuePrint(printerID)
             # Release the binary semaphore
            
+            self.outer.binary.release()
             # Increment the semaphore count so that machines can send requests
 
 
