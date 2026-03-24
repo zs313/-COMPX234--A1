@@ -118,10 +118,8 @@ class Assignment1:
         def isRequestSafe(self, id):
             print(f"Machine {id} Checking availability")
             # Acquire counting semaphore (wait for an available printer)
-            
             self.outer.semaphore.acquire()
             # Acquire binary semaphore for mutual exclusion of the print queue
-
             self.outer.binary.acquire()
             # Both semaphores acquired
             print(f"Machine {id} will proceed")
