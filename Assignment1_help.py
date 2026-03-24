@@ -22,7 +22,7 @@ class Assignment1:
         
         # Create semaphores
         self.semaphore = threading.Semaphore(self.NUM_PRINTERS)  # counting semaphore
-        self.binary = threading.Semaphore(1)
+        self.binary = threading.Semaphore(1)#diffrerence
 
     def startSimulation(self):
         # Create Machine and Printer threads
@@ -78,7 +78,7 @@ class Assignment1:
             time.sleep(sleepSeconds)
 
         def printDox(self, printerID):
-            print(f"Printer ID: {printerID} : now available")
+            print(f"Printer ID: {printerID} : now available")#add lock
             #Write code here for Binary and counting Semaphore
             # Acquire the binary semaphore to ensure mutual exclusion
             self.outer.binary.acquire()
@@ -111,7 +111,7 @@ class Assignment1:
                 # Both semaphores have been acquired, now send a print request
                 self.printRequest(self.machineID)
                 # Release the binary semaphore after inserting the print request
-                self.postRequest(self.machineID)
+                self.postRequest(self.machineID)#task1 request directly there check send release
 
         def machineSleep(self):
             sleepSeconds = random.randint(1, self.outer.MAX_MACHINE_SLEEP)
@@ -135,7 +135,7 @@ class Assignment1:
             self.outer.print_list.queueInsert(doc)
 
         # Write code here for postRequest, i.e., after inserting the print request
-        def postRequest(self, id):
+        def postRequest(self, id):#release queue lock
             print(f"Machine {id} Releasing binary semaphore")
             # Release the binary semaphore
             self.outer.binary.release()
