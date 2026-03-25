@@ -24,6 +24,10 @@ class Assignment1:
         self.semaphore = threading.Semaphore(self.NUM_PRINTERS)  # counting semaphore
         self.binary = threading.Semaphore(1)#diffrerence
 
+        self.queue_full=threading.Semaphore(self.NUM_PRINTERS)#num of printers= max capacity of queue
+        self.queue_epmty=threading.Semaphore(0)               #wgen printer is waiting ,the queue is null
+        #
+
     def startSimulation(self):
         # Create Machine and Printer threads
         # Write code here
