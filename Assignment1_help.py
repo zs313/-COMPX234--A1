@@ -25,7 +25,7 @@ class Assignment1:
         self.binary = threading.Semaphore(1)#diffrerence
 
         self.queue_full=threading.Semaphore(self.NUM_PRINTERS)#num of printers= max capacity of queue
-        self.queue_epmty=threading.Semaphore(0)               #wgen printer is waiting ,the queue is null
+        self.queue_empty=threading.Semaphore(0)               #wgen printer is waiting ,the queue is null
         #
 
     def startSimulation(self):
@@ -69,10 +69,12 @@ class Assignment1:
         def run(self):
             while self.outer.sim_active:
                 # Simulate printer taking some time to print the document
-                self.printerSleep()
+                self.printerSleep()#task1
                 # Grab the request at the head of the queue and print it
                 # Write code here
-                self.printDox(self.printerID)
+                self.outer.queue_empty.acquire()
+                self.printDox(self.printerID)#task1 print
+                self.outer.queue_full.release()
 
 
                 
@@ -92,7 +94,7 @@ class Assignment1:
             # Release the binary semaphore
             self.outer.binary.release()
             # Increment the semaphore count so that machines can send requests
-            self.outer.semaphore.release()
+
 
 
 
@@ -124,6 +126,7 @@ class Assignment1:
         # Write code here for Acquiring the Counting Semaphore
         def isRequestSafe(self, id):
             print(f"Machine {id} Checking availability")
+            self.outer.queue_full.acquire()#defend cover
             # Acquire counting semaphore (wait for an available printer)
             self.outer.semaphore.acquire()
             # Acquire binary semaphore for mutual exclusion of the print queue
@@ -143,3 +146,5 @@ class Assignment1:
             print(f"Machine {id} Releasing binary semaphore")
             # Release the binary semaphore
             self.outer.binary.release()
+
+            self.outer.queue_empty.release()
