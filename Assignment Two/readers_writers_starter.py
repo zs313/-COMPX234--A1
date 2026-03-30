@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import random
 import threading
-import time
+
 
 
 class ReadersWritersMonitor:
@@ -46,7 +46,7 @@ class ReadersWritersMonitor:
         """
         Called before a reader starts reading.
         Block the reader if a writer is writing.
-
+        //if there is sb writing ， nobody can read
         TODO:
         1. Acquire the condition using 'with self.condition:'.
         2. Wait while a writer is active.
@@ -55,7 +55,14 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
-            pass
+            # if there is sb writing ， nobody can read
+            while self.waiting_writers > 0:
+                print(f"{reader_id}is waiting to read")
+                self.condition.wait()
+            # waitor can read
+            self.active_readers+=1
+            print(f"{reader_id}{self.active_readers}is reading")
+
 
     def end_read(self, reader_id: int) -> None:
         """
@@ -68,7 +75,7 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
-            pass
+
 
     def start_write(self, writer_id: int) -> None:
         """
