@@ -75,8 +75,11 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
-
-
+            self.active_readers-=1
+            print(f"{reader_id}{self.active_readers}is stop reading")
+            #if there is no reader awake the writer
+            if self.active_readers==0:
+              self.condition.notify_all()
     def start_write(self, writer_id: int) -> None:
         """
         Called before a writer starts writing.
