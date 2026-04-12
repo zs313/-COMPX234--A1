@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import random
 import threading
+import time
 
 
 
@@ -56,12 +57,12 @@ class ReadersWritersMonitor:
         with self.condition:
             # TODO: Replace 'pass' with your logic
             # if there is sb writing ， nobody can read
-            while self.waiting_writers > 0:
-                print(f"{reader_id}is waiting to read")
+            while self.active_writers>0:
+                print(f"Reader {reader_id} is waiting to read")
                 self.condition.wait()
             # waitor can read
             self.active_readers+=1
-            print(f"{reader_id}{self.active_readers}is reading")
+            print(f"Reader {reader_id} starts reading ( {self.active_readers})")
 
 
     def end_read(self, reader_id: int) -> None:
@@ -76,7 +77,7 @@ class ReadersWritersMonitor:
         with self.condition:
             # TODO: Replace 'pass' with your logic
             self.active_readers-=1
-            print(f"{reader_id}{self.active_readers}is stop reading")
+            print(f"Reader{reader_id} stops reading ({self.active_readers})")
             #if there is no reader awake the writer
             if self.active_readers==0:
               self.condition.notify_all()
@@ -100,7 +101,7 @@ class ReadersWritersMonitor:
 
             self.waiting_writers-=1
             self.active_writers+=1
-            print(f"writer{writer_id}is writing")
+            print(f"writer {writer_id} starts writing")
 
     def end_write(self, writer_id: int) -> None:
         """
@@ -114,7 +115,7 @@ class ReadersWritersMonitor:
         with self.condition:
             # TODO: Replace 'pass' with your logic
             self.active_writers-=1
-            print(f"writer {writer_id}stops writing")
+            print(f"writer  {writer_id} stops writing")
 
             #awake all threads
             self.condition.notify_all()
@@ -179,12 +180,12 @@ def main() -> None:
 
     #TODO: Create at least 3 Reader threads.
     readers = [
-        Reader(reader_id=1, monitor=monitor)for i in range(1,4)#id 1 2 3
+        Reader(reader_id=i, monitor=monitor)for i in range(1,4)#id 1 2 3
     ]
     
     #TODO: Create at least 2 writer threads.
     writers = [
-        Writer(writer_id=1, monitor=monitor)for i in range(1,3)#id 1 2
+        Writer(writer_id=i, monitor=monitor)for i in range(1,3)#id 1 2
     ]
 
     all_threads = readers + writers
