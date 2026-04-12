@@ -98,7 +98,6 @@ class ReadersWritersMonitor:
             while self.active_readers >0 or self.active_writers>0:
                 self.condition.wait()
 
-
             self.waiting_writers-=1
             self.active_writers+=1
             print(f"writer{writer_id}is writing")
@@ -180,26 +179,26 @@ def main() -> None:
 
     #TODO: Create at least 3 Reader threads.
     readers = [
-        Reader(reader_id=1, monitor=monitor)
         Reader(reader_id=1, monitor=monitor)for i in range(1,4)#id 1 2 3
     ]
     
     #TODO: Create at least 2 writer threads.
     writers = [
-        Writer(writer_id=1, monitor=monitor)
         Writer(writer_id=1, monitor=monitor)for i in range(1,3)#id 1 2
     ]
 
     all_threads = readers + writers
     
     # TODO: Start all threads
-
-    
+    print("starting all threads")
+    for t in all_threads:
+        t.start()
     # TODO: Wait for all threads to finish
-
+    for t in all_threads:
+        t.join()
 
     # TODO: Print final message that simulation completed
-
+    print("All threads have finished")
 
 if __name__ == "__main__":
     main()
