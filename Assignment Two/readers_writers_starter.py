@@ -93,7 +93,10 @@ class ReadersWritersMonitor:
         """
         with self.condition:
             # TODO: Replace 'pass' with your logic
-            pass
+            self.waiting_writers+=1
+# if sb read or write  you need to wait
+            while self.active_readers >0 or self.active_writers>0:
+                print()
 
     def end_write(self, writer_id: int) -> None:
         """
