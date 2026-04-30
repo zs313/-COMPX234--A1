@@ -2,10 +2,6 @@ import socket
 import sys
 import os
 
-from torch.fx.passes.graph_manipulation import size_bytes
-from torch.onnx.symbolic_opset11 import chunk
-from torch.utils.hipify.hipify_python import value
-from torchvision import message
 
 
 def main():
@@ -134,13 +130,13 @@ def main():
             response_size= int(size_str)
 
             #read the rest of the responce body
-            size_bytes=b""
+            response_data=b""
             remaining=response_size-3
-            while len(size_bytes)<remaining:
-                a=sock.recv(remaining-len(size_bytes))
+            while len(response_data)<remaining:
+                a=sock.recv(remaining-len(response_data))
                 if not a :
                     print("connection closed")
-                    return
+                    break
                 size_bytes += a
 
 

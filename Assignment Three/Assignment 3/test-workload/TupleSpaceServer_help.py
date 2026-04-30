@@ -3,9 +3,7 @@ import sys
 import threading
 import time
 
-from scipy.constants import value
-from torch.fx.passes.graph_manipulation import size_bytes
-from torchvision import message
+
 
 # using a lock -- see https://realpython.com/python-thread-lock/
 # sockets -- see https://realpython.com/python-sockets/#python-socket-api-overview
@@ -90,12 +88,12 @@ def handle_client(client_socket):
             size_str=size_bytes.decode()
             message_size=int(size_str)
             # Read the remaining part of the message
-            message_size=receive_n(client_socket,message_size-3)
+            message_bytes=receive_n(client_socket,message_size-3)
 
             if not message_size:
                 break
 
-            message = message_size.decode()
+            message = message_bytes.decode()
 
             # Handle the request
             response = handle_request(message)
@@ -143,11 +141,9 @@ def handle_request(message):
             increment_stat("read_count")
             if key in tuple_space:
                 value=tuple_space[key]
-                lock.release()
                 return "ok ,you can read"
 
             if key not in tuple_space:
-                lock.release()
                 return "error:not found"
 
 
@@ -163,11 +159,9 @@ def handle_request(message):
                 value=tuple_space[key]
                 #delete the key
                 del tuple_space[key]
-                lock.release()
                 return "ok ,you can remove"
 
             if key not in tuple_space:
-                lock.release()
                 return "error:not found"
 
 
@@ -186,25 +180,20 @@ def handle_request(message):
             increment_stat("put_count")
             # Check value length and total length limits before adding.
             if len(value)>999:
-                lock.release()
                 return "value too long"
 
             if len(key+""+value)>970:
-                lock.release()
                 return "key+value too long"
             # Return success if added, or error if key already exists or is invalid.
             if key in tuple_space:
-                lock.release()
                 return key+"have existed"
 
             if key not in tuple_space:
                 tuple_space[key]=value
-                lock.release()
                 return key+value+"added"
 
         #unknown
         if op!="R" and op!="G" and op!="P" :
-            lock.release()
             return "unknown error"
 
 
