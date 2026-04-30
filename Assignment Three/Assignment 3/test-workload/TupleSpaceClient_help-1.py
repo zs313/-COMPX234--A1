@@ -119,6 +119,16 @@ def main():
             # - Receive: first read 3 bytes to get the response size (like the server does).
             #            Then read the remaining (size - 3) bytes to get the response body.
 
+            #send message
+            sock.sendall(message.encode())
+            #read first 3bytes it is response size
+            size_bytes=b""
+            while len(size_bytes)<3:
+                a =sock.recv(3-len(size_bytes))
+                if not a:
+                    print("connection closed")
+                    return
+                size_bytes+=a
 
             response = response_buffer.decode().strip()
             print(f"{line}: {response}")
