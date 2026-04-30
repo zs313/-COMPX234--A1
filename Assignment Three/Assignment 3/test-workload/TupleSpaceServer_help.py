@@ -3,6 +3,7 @@ import sys
 import threading
 import time
 
+from scipy.constants import value
 from torch.fx.passes.graph_manipulation import size_bytes
 from torchvision import message
 
@@ -138,7 +139,17 @@ def handle_request(message):
         if op == "R":
             # TASK 3: READ — look up key in tuple_space.
             # Return "OK (<key>, <value>) read" or "ERR <key> does not exist".
+            # Search the tuple space for the given key. Return success message if the key exists,
             increment_stat("read_count")
+            if key in tuple_space:
+                value=tuple_space[key]
+                lock.release()
+                return "ok ,you can read"
+
+            if key not in tuple_space:
+                lock.release()
+                return "error:not found"
+
 
 
         elif op == "G":
