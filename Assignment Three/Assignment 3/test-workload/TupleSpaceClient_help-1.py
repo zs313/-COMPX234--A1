@@ -2,6 +2,8 @@ import socket
 import sys
 import os
 
+from torch.fx.passes.graph_manipulation import size_bytes
+from torch.onnx.symbolic_opset11 import chunk
 from torch.utils.hipify.hipify_python import value
 from torchvision import message
 
@@ -57,6 +59,7 @@ def main():
                     key = parts[1]
 
                     #ensure read or get
+                    op=""
                     if cmd =="READ":
                         op ="R"
                     if cmd =="GET":
@@ -64,6 +67,11 @@ def main():
                     #6=3number +space+ letter+space+lenn(ket)
                     total_length= 6+len(key)
                     message =f"{total_length:03d}{op}{key}"
+                    len_str=str(total_length)
+                    while len(len_str)<3:
+                        len_str="0"+len_str
+                    message =len_str +""+op+""+key
+
 
 
                     #PUT command
@@ -89,7 +97,11 @@ def main():
                             print("key+value beyond 970chars")
                             continue
 
-
+                        total_length=7+len(key)+len(value)
+                        len_str = str(total_length)
+                        while len(len_str) < 3:
+                            len_str = "0" + len_str
+                        message = len_str + "P" + op + "" + key
 
 
 
