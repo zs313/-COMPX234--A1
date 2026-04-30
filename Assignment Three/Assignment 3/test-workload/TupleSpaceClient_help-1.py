@@ -65,45 +65,45 @@ def main():
                 len_str=str(total_length)
                 while len(len_str)<3:
                     len_str="0"+len_str
-                message =len_str +""+op+""+key
+                message =len_str +" "+op+" "+key
 
 
 
                     #PUT command
-                if cmd =="PUT":
-                    if len(parts)<3:
-                        print("miss key")
-                        continue
+            if cmd =="PUT":
+                if len(parts)<3:
+                    print("miss key")
+                    continue
 
-                    key=parts[1]
-                    value=parts[2]
+                key=parts[1]
+                value=parts[2]
 
-                    #value and key cannot beyond 999chars
-                    if len(key)>999:
-                        print("key too long")
-                        continue
+                #value and key cannot beyond 999chars
+                if len(key)>999:
+                    print("key too long")
+                    continue
 
-                    if len(value)>999:
-                        print("value too long")
-                        continue
+                if len(value)>999:
+                    print("value too long")
+                    continue
 
                         #key+space+calue <= 970chars
-                    if len(key+""+value)>970:
-                        print("key+value beyond 970chars")
-                        continue
+                if len(key+""+value)>970:
+                    print("key+value beyond 970chars")
+                    continue
 
                         #calculate the total size
-                    total_length=7+len(key)+len(value)
-                    len_str = str(total_length)
-                    while len(len_str) < 3:
-                        len_str = "0" + len_str
-                    message = len_str + "P" + op + "" + key
+                total_length=7+len(key)+len(value)
+                len_str = str(total_length)
+                while len(len_str) < 3:
+                    len_str = "0" + len_str
+                message = len_str + " P " + op + " " + key
 
 
-                    #unknown command
-                    if cmd !="READ" and cmd != "GET" and cmd!="PUT":
-                        print("unknown command")
-                        continue
+            #unknown command
+            if cmd !="READ" and cmd != "GET" and cmd!="PUT":
+                print("unknown command")
+                continue
 
 
 
@@ -137,7 +137,9 @@ def main():
                 if not a :
                     print("connection closed")
                     break
-                size_bytes += a
+                response_data += a
+
+
 
 
 

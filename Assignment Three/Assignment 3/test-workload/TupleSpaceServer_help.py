@@ -90,7 +90,7 @@ def handle_client(client_socket):
             # Read the remaining part of the message
             message_bytes=receive_n(client_socket,message_size-3)
 
-            if not message_size:
+            if not message_bytes:
                 break
 
             message = message_bytes.decode()
@@ -141,10 +141,10 @@ def handle_request(message):
             increment_stat("read_count")
             if key in tuple_space:
                 value=tuple_space[key]
-                return "ok ,you can read"
+                return " OK("+key+","+value+") read"
 
             if key not in tuple_space:
-                return "error:not found"
+                return "ERR:does not found"
 
 
 
@@ -159,10 +159,10 @@ def handle_request(message):
                 value=tuple_space[key]
                 #delete the key
                 del tuple_space[key]
-                return "ok ,you can remove"
+                return "OK ("+key+","+value+") removed"
 
             if key not in tuple_space:
-                return "error:not found"
+                return "ERR:does not found"
 
 
 
@@ -180,21 +180,22 @@ def handle_request(message):
             increment_stat("put_count")
             # Check value length and total length limits before adding.
             if len(value)>999:
-                return "value too long"
+                return "err value too long"
 
             if len(key+""+value)>970:
-                return "key+value too long"
+                return "err key+value too long"
             # Return success if added, or error if key already exists or is invalid.
             if key in tuple_space:
-                return key+"have existed"
+                return "err" + key + " already exists"
 
             if key not in tuple_space:
                 tuple_space[key]=value
-                return key+value+"added"
+                return "OK("+ key +", " + value + ") added"
 
         #unknown
-        if op!="R" and op!="G" and op!="P" :
-            return "unknown error"
+        else:
+            increment_stat("error_count")
+            return "ERR Unknown operation"
 
 
 
