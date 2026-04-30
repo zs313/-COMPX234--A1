@@ -156,7 +156,23 @@ def handle_request(message):
             # TASK 4: GET — remove key from tuple_space and return its value.
             # Return "OK (<key>, <value>) removed" or "ERR <key> does not exist".
             # Hint: dict.pop(key, None) removes and returns the value, or None if missing.
+
+            # Find the key, remove it from the tuple space, and return the removed value.
             increment_stat("get_count")
+            if key in tuple_space:
+                value=tuple_space[key]
+                #delete the key
+                del tuple_space[key]
+                lock.release()
+                return "ok ,you can remove"
+
+            if key not in tuple_space:
+                lock.release()
+                return "error:not found"
+
+
+
+
 
 
         elif op == "P":
