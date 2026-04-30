@@ -120,7 +120,7 @@ def handle_request(message):
     if len(message) < 3:
         increment_stat("error_count")
         return "ERR Invalid message"
-
+    message=message.strip()
     # split(" ", 2) keeps values with spaces intact in parts[2]
     parts = message.split(" ", 2)
     if len(parts) < 2:

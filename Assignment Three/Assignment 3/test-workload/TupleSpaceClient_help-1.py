@@ -97,7 +97,7 @@ def main():
                 len_str = str(total_length)
                 while len(len_str) < 3:
                     len_str = "0" + len_str
-                message = len_str + " P " + op + " " + key
+                message = len_str + " P " + key + " " +value
 
 
             #unknown command
@@ -145,7 +145,7 @@ def main():
 
 
 
-            response = response_buffer.decode().strip()
+            response = response_data.decode().strip()
             print(f"{line}: {response}")
 
     except (socket.error, ValueError) as e:
