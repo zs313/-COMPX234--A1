@@ -75,8 +75,23 @@ def main():
                         key=parts[1]
                         value=parts[2]
 
+                        #value and key cannot beyond 999chars
+                        if len(key)>999:
+                            print("key too long")
+                            continue
 
-                        
+                        if len(value)>999:
+                            print("value too long")
+                            continue
+
+                        #key+space+calue <= 970chars
+                        if len(key+""+value)>970:
+                            print("key+value beyond 970chars")
+                            continue
+
+
+
+
 
 
 
