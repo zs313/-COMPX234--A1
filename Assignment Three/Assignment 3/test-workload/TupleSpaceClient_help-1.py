@@ -21,7 +21,6 @@ def main():
     # TASK 1: Create a TCP/IP socket and connect it to the server.
     # Hint: socket.socket(socket.AF_INET, socket.SOCK_STREAM) creates the socket.
     # Then call sock.connect((hostname, port)) to connect.
-
     #AF_INET  means IPv4 address
     #SOCK_STREAM means TCP protocol
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -45,6 +44,22 @@ def main():
             # X is "R" for READ and "G" for GET.
             # Hint: for READ/GET, size = 6 + len(key). For PUT, size = 7 + len(key) + len(value).
             # Reject lines with invalid format or key+" "+value > 970 chars.
+            if cmd == "READ" or cmd =="GET":# check is key is provided
+                if len(parts)<2:
+                    print("miss key")
+                    continue
+
+
+                    key = parts[1]
+
+                    #ensure read or get
+                    if cmd =="READ":
+                        op ="R"
+                    else:
+                        op ="G"
+                    #6=3number +space+ letter+space+lenn(ket)
+                    total_length= 6+len(key)
+
 
 
             # TASK 3: Send the message to the server, then receive the response.
