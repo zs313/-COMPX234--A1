@@ -155,5 +155,10 @@ def main():
         # finally: is the right place to do this even if an error occurs above).
         sock.close()
 
+        #finally always rusn, even if try has an error
+        #socket gets closed properly so donot waste system resource
+        if sock is not  None:
+           sock.close()
+
 if __name__ == "__main__":
     main()
