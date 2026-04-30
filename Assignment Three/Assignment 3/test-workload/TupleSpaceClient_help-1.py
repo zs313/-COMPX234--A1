@@ -104,6 +104,10 @@ def main():
                         message = len_str + "P" + op + "" + key
 
 
+                        #unknown command
+                        if cmd !="READ" and cmd != "GET" and cmd!="PUT":
+                            print("unknown command")
+                            continue
 
 
 
