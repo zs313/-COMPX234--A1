@@ -2,6 +2,10 @@ import socket
 import sys
 import os
 
+from torch.utils.hipify.hipify_python import value
+from torchvision import message
+
+
 def main():
     if len(sys.argv) != 4:
         print("Usage: python tuple_space_client.py <server-hostname> <server-port> <input-file>")
@@ -55,10 +59,27 @@ def main():
                     #ensure read or get
                     if cmd =="READ":
                         op ="R"
-                    else:
+                    if cmd =="GET":
                         op ="G"
                     #6=3number +space+ letter+space+lenn(ket)
                     total_length= 6+len(key)
+                    message =f"{total_length:03d}{op}{key}"
+
+
+                    #PUT command
+                    if cmd =="PUT":
+                        if len(parts)<3:
+                            print("miss key")
+                            continue
+
+                        key=parts[1]
+                        value=parts[2]
+
+
+                        
+
+
+
 
 
 
