@@ -30,7 +30,7 @@ def main():
     #AF_INET  means IPv4 address
     #SOCK_STREAM means TCP protocol
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    #comnect to the server
+    #connect to the server
     sock.connect((hostname,port))
 
     try:
@@ -56,58 +56,58 @@ def main():
                     continue
 
 
-                    key = parts[1]
+                key = parts[1]
 
-                    #ensure read or get
-                    op=""
-                    if cmd =="READ":
-                        op ="R"
-                    if cmd =="GET":
-                        op ="G"
+                       #ensure read or get
+                op=""
+                if cmd =="READ":
+                    op ="R"
+                if cmd =="GET":
+                    op ="G"
                     #6=3number +space+ letter+space+lenn(ket)
-                    total_length= 6+len(key)
-                    message =f"{total_length:03d}{op}{key}"
-                    len_str=str(total_length)
-                    while len(len_str)<3:
-                        len_str="0"+len_str
-                    message =len_str +""+op+""+key
+                total_length= 6+len(key)
+                len_str=str(total_length)
+                while len(len_str)<3:
+                    len_str="0"+len_str
+                message =len_str +""+op+""+key
 
 
 
                     #PUT command
-                    if cmd =="PUT":
-                        if len(parts)<3:
-                            print("miss key")
-                            continue
+                if cmd =="PUT":
+                    if len(parts)<3:
+                        print("miss key")
+                        continue
 
-                        key=parts[1]
-                        value=parts[2]
+                    key=parts[1]
+                    value=parts[2]
 
-                        #value and key cannot beyond 999chars
-                        if len(key)>999:
-                            print("key too long")
-                            continue
+                    #value and key cannot beyond 999chars
+                    if len(key)>999:
+                        print("key too long")
+                        continue
 
-                        if len(value)>999:
-                            print("value too long")
-                            continue
+                    if len(value)>999:
+                        print("value too long")
+                        continue
 
                         #key+space+calue <= 970chars
-                        if len(key+""+value)>970:
-                            print("key+value beyond 970chars")
-                            continue
+                    if len(key+""+value)>970:
+                        print("key+value beyond 970chars")
+                        continue
 
-                        total_length=7+len(key)+len(value)
-                        len_str = str(total_length)
-                        while len(len_str) < 3:
-                            len_str = "0" + len_str
-                        message = len_str + "P" + op + "" + key
+                        #calculate the total size
+                    total_length=7+len(key)+len(value)
+                    len_str = str(total_length)
+                    while len(len_str) < 3:
+                        len_str = "0" + len_str
+                    message = len_str + "P" + op + "" + key
 
 
-                        #unknown command
-                        if cmd !="READ" and cmd != "GET" and cmd!="PUT":
-                            print("unknown command")
-                            continue
+                    #unknown command
+                    if cmd !="READ" and cmd != "GET" and cmd!="PUT":
+                        print("unknown command")
+                        continue
 
 
 
@@ -127,7 +127,7 @@ def main():
                 a =sock.recv(3-len(size_bytes))
                 if not a:
                     print("connection closed")
-                    return
+                    break
                 size_bytes+=a
             # Convert received byte data to string, then convert to integer length
             size_str=size_bytes.decode()
@@ -144,6 +144,9 @@ def main():
                 size_bytes += a
 
 
+
+
+
             response = response_buffer.decode().strip()
             print(f"{line}: {response}")
 
@@ -153,7 +156,6 @@ def main():
     finally:
         # TASK 4: Close the socket when done (already called for you — explain why
         # finally: is the right place to do this even if an error occurs above).
-        sock.close()
 
         #finally always rusn, even if try has an error
         #socket gets closed properly so donot waste system resource
