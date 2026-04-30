@@ -3,6 +3,9 @@ import sys
 import threading
 import time
 
+from torch.fx.passes.graph_manipulation import size_bytes
+from torchvision import message
+
 # using a lock -- see https://realpython.com/python-thread-lock/
 # sockets -- see https://realpython.com/python-sockets/#python-socket-api-overview
 
@@ -75,7 +78,23 @@ def handle_client(client_socket):
             # TASK 1: Read the first 3 bytes to get the message size, then read
             # the remaining (size - 3) bytes and decode to a string.
             # Hint: use receive_n(). If nothing arrives, client disconnected — break.
+            # Read exactly 3 bytes for message length header
+            size_bytes =receive_n(client_socket,3)
+            # If no data received, client disconnected
+            if not size_bytes:
+                break
+            if len(size_bytes)<3:
+                break
 
+            size_str=size_bytes.decode()
+            message_size=int(size_str)
+            # Read the remaining part of the message
+            message_size=receive_n(client_socket,message_size-3)
+
+            if not message_size:
+                break
+
+            message=message_size.decode()
 
             # Handle the request
             response = handle_request(message_buffer)
