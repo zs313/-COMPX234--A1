@@ -184,11 +184,31 @@ def handle_request(message):
             # Validate: len(value) <= 999 and len(key + " " + value) <= 970.
             # Return "OK (<key>, <value>) added" or "ERR <key> already exists".
             increment_stat("put_count")
+            # Check value length and total length limits before adding.
+            if len(value)>999:
+                lock.release()
+                return "value too long"
+
+            if len(key+""+value)>970:
+                lock.release()
+                return "key+value too long"
+            # Return success if added, or error if key already exists or is invalid.
+            if key in tuple_space:
+                lock.release()
+                return key+"have existed"
+
+            if key not in tuple_space:
+                tuple_space[key]=value
+                lock.release()
+                return key+value+"added"
+
+        #unknown
+        if op!="R" and op!="G" and op!="P" :
+            lock.release()
+            return "unknown error"
 
 
-        else:
-            increment_stat("error_count")
-            return "ERR Unknown operation"
+
 
 
 def main():
