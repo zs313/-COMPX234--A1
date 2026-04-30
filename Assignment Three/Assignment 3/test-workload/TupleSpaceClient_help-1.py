@@ -129,6 +129,20 @@ def main():
                     print("connection closed")
                     return
                 size_bytes+=a
+            # Convert received byte data to string, then convert to integer length
+            size_str=size_bytes.decode()
+            response_size= int(size_str)
+
+            #read the rest of the responce body
+            size_bytes=b""
+            remaining=response_size-3
+            while len(size_bytes)<remaining:
+                a=sock.recv(remaining-len(size_bytes))
+                if not a :
+                    print("connection closed")
+                    return
+                size_bytes += a
+
 
             response = response_buffer.decode().strip()
             print(f"{line}: {response}")
