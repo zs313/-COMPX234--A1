@@ -102,6 +102,14 @@ def handle_client(client_socket):
             # TASK 2: Build the response string with its size prepended (3 digits + space),
             # then send it. Hint: total size = len(response) + 4. Use sendall().
 
+            total_size=len(response)+4
+            len_str=str(total_size)
+            while len(len_str)<3:
+                len_str="0"+len_str
+            response_msg=len_str+""+response
+            # Send final response back to client
+            client_socket.sendall(response_msg.encode())
+
     except (socket.error, ValueError):
         pass
     finally:
